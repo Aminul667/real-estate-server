@@ -43,12 +43,25 @@ export const login = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Failed to login!" });
+      return res.status(401).json({ message: "Invalid Credentials!" });
     }
 
     // !generate cookie token and send to the user
+    const age = 1000 * 60 * 60 * 24 * 7;
+
+    res
+      .cookie("test2", "myValue", {
+        httpOnly: true,
+        // secure: true,
+        maxAge: age,
+      })
+      .status(200)
+      .json({ message: "Login Successful!" });
+
+    // res.setHeader("Set-Cookie", "test=" + "myValue").json("Success");
   } catch (err) {
     console.log(err);
+    res.status(500).json({ message: "Failed to login!" });
   }
 };
 
